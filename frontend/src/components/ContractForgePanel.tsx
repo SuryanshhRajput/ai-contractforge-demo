@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function ContractForgePanel() {
   const [english, setEnglish] = useState("");
@@ -6,7 +6,6 @@ export default function ContractForgePanel() {
   const [explanation, setExplanation] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
 
-  // Connect MetaMask
   async function connectWallet() {
     if (!(window as any).ethereum) return alert("Install MetaMask");
     try {
@@ -18,46 +17,59 @@ export default function ContractForgePanel() {
     }
   }
 
-  // Stub Generate button
   function generateContract() {
     setSolidity(`// MilestoneEscrow contract (stub)
 pragma solidity ^0.8.28;
 contract MilestoneEscrow {}`);
-    setExplanation("This contract locks funds until delivery; pays payee if delivered on time, else refunds payer.");
+    setExplanation(
+      "This contract locks funds until delivery; pays payee if delivered on time, else refunds payer."
+    );
   }
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-4 bg-white shadow rounded mt-10">
-      <h2 className="text-xl font-semibold">AI ContractForge — Demo</h2>
+    <div className="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8 space-y-6">
       <div className="flex justify-between items-center">
-        <button className="px-3 py-1 border rounded" onClick={connectWallet}>
-          {walletAddress ? `${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}` : "Connect MetaMask"}
-        </button>
-      </div>
-
-      <textarea
-        className="w-full h-24 p-3 border rounded"
-        placeholder='Describe contract in plain English e.g. "If Alice delivers by Sept 15, Bob pays 2 ETH..."'
-        value={english}
-        onChange={(e) => setEnglish(e.target.value)}
-      />
-
-      <div className="flex gap-2">
-        <button className="px-4 py-2 bg-sky-600 text-white rounded" onClick={generateContract}>
-          Generate
+        <h2 className="text-2xl font-bold text-gray-800">AI ContractForge</h2>
+        <button
+          onClick={connectWallet}
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+        >
+          {walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : "Connect Wallet"}
         </button>
       </div>
 
       <div>
-        <h3 className="font-medium">Generated Solidity</h3>
-        <pre className="bg-gray-100 p-3 rounded overflow-auto max-h-60">
-          <code>{solidity || "No code yet"}</code>
+        <label className="block mb-2 font-medium text-gray-700">Describe Contract (Plain English)</label>
+        <textarea
+          className="w-full p-4 border rounded-xl bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+          placeholder='E.g. "If Alice delivers by Sept 15, Bob pays 2 ETH..."'
+          value={english}
+          onChange={(e) => setEnglish(e.target.value)}
+          rows={4}
+        />
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          onClick={generateContract}
+          className="px-6 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition"
+        >
+          Generate Contract
+        </button>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-gray-700 mb-2">Generated Solidity</h3>
+        <pre className="bg-gray-100 rounded-xl p-4 overflow-auto max-h-64 text-gray-800">
+          <code>{solidity || "// Solidity code will appear here..."}</code>
         </pre>
       </div>
 
       <div>
-        <h3 className="font-medium">Plain-English Explanation</h3>
-        <div className="bg-gray-50 p-3 rounded">{explanation || "No explanation yet"}</div>
+        <h3 className="font-semibold text-gray-700 mb-2">Plain-English Explanation</h3>
+        <div className="bg-gray-50 p-4 rounded-xl text-gray-800">
+          {explanation || "Explanation will appear here..."}
+        </div>
       </div>
     </div>
   );

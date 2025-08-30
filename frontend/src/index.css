@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
+body { flex: auto
+  @apply antialiased font-sans;
+}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
